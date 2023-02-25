@@ -48,4 +48,7 @@ telemetryも完璧なものではないですが、使わない機能や問題�
 
 ## [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
 
+# 最後に
+
+すべて一つの記事にまとめようと考えていましたが、具体例など興味深く丁寧にまとめていたら長くなりそうなので、記事ごとに分割して公開していく予定です。
 
