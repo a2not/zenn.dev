@@ -6,7 +6,7 @@ topics: ["go", "oss", "proposal"]
 published: false
 ---
 
-[リストページはこちら](https://zenn.dev/a2not/articles/telemetry-index)
+[目次ページはこちら](https://zenn.dev/a2not/articles/telemetry-index)
 
 [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]
 
