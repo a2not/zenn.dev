@@ -11,7 +11,7 @@ published: false
 Goのtoolchainにtelemetryを導入することで、`go`, `gopls`, `govulncheck`などのコマンドラインツールの使われ方についての情報を収集し、オープンソースであるGo言語の開発に活用しようというproposalがあります。
 [telemetry in the Go toolchain #58409](https://github.com/golang/go/discussions/58409) 
 
-Discussionsは賛否両論ですが、本記事執筆時点ではDiscussionsはLockされ、[proposalの投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、[「デフォルトでoff、もしくは初回利用時にon/offを選択できるようにすべき」](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)といった意見が支持を集めている現状のようです。
+本記事執筆時点ではDiscussionsはLockされ、[proposalの投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
 
 本記事は、Go toolchainへのtelemetry導入のproposalの展望を理解するために、proposalと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["Transparent Telemetry" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事（Discussionsを受けて追加された1本の追加記事含む）について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめです。（結果的にほとんど和訳になってますが、省略や表現の変更などがあります。）誤りに気づいた場合はコメント下さい。]
 
