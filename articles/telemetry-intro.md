@@ -8,15 +8,15 @@ published: false
 
 [リストページはこちら](https://zenn.dev/a2not/articles/telemetry-index)
 
-# [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)
+[Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]
 
 ソフトウェアがどのように使われ、期待するパフォーマンスを発揮しているかを知るためのモダンな手法として、Russはtelemetryを上げています。その上で、それをオープンソース向けにした新たなデザインとして"Transparent Telemetry"を提案しています。
 
-## [Why Telemetry?](https://research.swtch.com/telemetry-intro#why)
+# [Why Telemetry?](https://research.swtch.com/telemetry-intro#why)
 
 telemetry以外にソフトウェアのバグや使われ方の情報を知れる手段としてバグ報告とサーベイをあげ、それぞれでは不十分であることを解説し、telemetryの必要性を訴えています。
 
-### バグ報告だけでは不十分
+## バグ報告だけでは不十分
 
 バグ報告では、ユーザーがバグと判定しその上で報告をされたものしか知ることができないが、ユーザーが気づけない事象についてtelemetryでは統計的に不具合を認識することができるとして、過去のGo開発からの具体例を上げています。
 
@@ -26,7 +26,7 @@ Go 1.14のリリースプロセスにおいて、Appleの署名ツールを使�
 
 telemetryがあれば、1.14移行のバージョンのGoを使っているMacの環境についてプリコンパイルされた標準ライブラリへのキャッシュミス率が100%であることが分かるため、すぐに気づくことができたのではないかと主張しています。
 
-### サーベイだけでは不十分
+## サーベイだけでは不十分
 
 サーベイではユーザーがGoをどんな目的で使いたいかなどを理解できたが、これはあくまで少ないサンプルであり、特に使われる頻度の少ない機能についての情報を集めるためには、精度を高めるためにさらに大きなサンプルを必要とする問題があります。
 
@@ -38,7 +38,7 @@ Goでの使われる頻度の少ない機能への変更例として、[Go1.13�
 
 telemetryも完璧なものではないですが、使わない機能や問題のある機能についてメンテナンスを続けるよりは、大きなサンプルのユーザーへのサーベイをする必要なく、統計的に利用状況を確認できるtelemetryを導入する必要性はあるのかもしれません。
 
-## [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
+# [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
 
 telemetryと聞くと、プライベートな部分まで情報収集されてしまうというようなネガティブなイメージを直感で持たれる方も少なくないのではないでしょうか。
 
@@ -59,13 +59,13 @@ Eric Raymondは「十分目玉に晒されていれば、すべてのバグは�
 
 オープンソースソフトウェアのための、必要最低限のユーザーアクティビティの収集から開発を効率化させられる、新しいtelemetryのデザインを考える必要があるでしょう。
 
-## [Transparent Telemetry](https://research.swtch.com/telemetry-intro#design)
+# [Transparent Telemetry](https://research.swtch.com/telemetry-intro#design)
 
 このシリーズで提案するTransparent Telemetryは、オープンソースのためのtelemetryで、最小限のデータ収集(年間で数キロバイト程度)と、集めた情報のすべてを公開する方針からその名前がついています。(「透過的テレメトリ」)
 
 ここでは、将来的にGoツールチェーンに導入を検討しているTransparent Telemetryの概要を紹介しています。
 
-### telemetryによる情報の収集
+## telemetryによる情報の収集
 GoツールチェーンのTelemetryにおいては、実行ごとにキャッシュヒット、利用した機能、レイテンシなどの情報を一週間ごとにディスクにファイルとして保存するようです。ユーザーのデータやユーザーを識別するような情報は含まず、一部で簡潔なスタックトレースなども保存するが、引数についての情報は一切保存しない方針です。
 
 GoogleのGoチームがtelemetryの情報収集用のサーバーを管理し、毎週10%の確率でユーザー環境に収集設定(`collection configuration`)をダウンロードして、どの情報をサーバーが欲しているのかを判断します。収集設定はGo moduleノカタチで配布されるため、Go checksum databaseでvalidateされています。
@@ -74,16 +74,17 @@ GoogleのGoチームがtelemetryの情報収集用のサーバーを管理し、
 先述の通り、データにはIDなどユーザーを識別する情報を含みません。例えば、ユーザー名、マシンID、MACアドレス、IPアドレス及びそのプレフィックス、マシンの位置情報、ランダムに生成された擬似的なIDも含みません。
 含まれる想定の情報としては、ツールチェーンのバージョンやビルドターゲットとされたOSやCPUアーキテクチャ、荒い粒度でのホストOSの情報(`"Windows 8"`など)、ツールチェーンが利用したローカルのCコンパイラなどの他のツールの情報(`"gcc 2.95"`)などがあります。
 
-### 集めた情報の公開
+## 集めた情報の公開
 
 集めた情報のアクセスとしては、毎日の収集情報の更新、telemetryのグラフなどの`go.dev`での公開、集まった情報をすべてダウンロード可能にする予定のようです。
 
 データを集めるためにTCPコネクションを利用した場合、システムのパブリックIPアドレスがデータに紐付くことになりますが、それらの情報については設定されるプライバシーポリシーに基づき、アップロードされ公開される前に切り離されます。
 というのも、DoS対策などを含むサーバーのメンテナンスのためにIPアドレスを含むログが必要になるため、IPアドレスは削除ではなく保存される必要があるのですが、公開されるデータとは別で保存されるようです(おそらく非公開で、サーバーの運用のためだけに使われる?)。
 
-### 利用方法
+## 利用方法
 
 Proposalでは次の点は議論の対象になっていましたが、記事では`GOTELEMETRY=off`が指定されない限りは、デフォルトでtelemetryが収集され、opt outする猶予期間としてツールチェーンのインストールから最低でも一週間は`GOTELEMETRY`の設定に関わらずデータは送信されないと記述されていました。
 
 (ちなみにDiscussionsでは、「[デフォルトでoff、そうでなければ事前にon/offを選択させるべき](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)」という意見が多く支持を集めているようです。)
+
 
