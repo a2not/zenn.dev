@@ -1,6 +1,8 @@
+title=''
+
 .PHONY: article
 article:
-	npx zenn new:article
+	npx zenn new:article --slug $(title)
 
 .PHONY: preview
 preview:
