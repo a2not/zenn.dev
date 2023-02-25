@@ -48,6 +48,15 @@ telemetryも完璧なものではないですが、使わない機能や問題�
 
 ## [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
 
+telemetryと聞くと、パーソナルな部分までジロジロ見られてしまうというようなネガティブなイメージを持たれる方も少なくないのでは無いでしょうか。
+キーボードによる入力の一つ一つまでを収集されるというのは誇張かもしれないけれど、あながち間違いでもないと感じるのも以下の現実に起きている例から納得できます。
+
+- [Kindleがページ送りのすべてを収集してる](https://www.theverge.com/2020/1/31/21117217/amazon-kindle-tracking-page-turn-taps-e-reader-privacy-policy-security-whispersync)
+- [VSCodeのtelemetryログ](https://www.roboleary.net/tools/2022/04/20/vscode-telemetry.html)
+- [.NETのtelemetryイベント](https://learn.microsoft.com/en-us/dotnet/core/tools/telemetry)
+
+
+
 # 最後に
 
 すべて一つの記事にまとめようと考えていましたが、具体例など興味深く丁寧にまとめていたら長くなりそうなので、記事ごとに分割して公開していく予定です。
