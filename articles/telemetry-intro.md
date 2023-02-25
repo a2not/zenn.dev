@@ -3,7 +3,7 @@ title: "Transparent Telemetry for Open-Source Projectsを読む"
 emoji: "🌌"
 type: "tech"
 topics: ["go", "oss", "proposal"]
-published: true
+published: false
 ---
 
 [目次ページはこちら](https://zenn.dev/a2not/articles/telemetry-index)
