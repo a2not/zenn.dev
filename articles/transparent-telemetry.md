@@ -48,12 +48,26 @@ telemetryも完璧なものではないですが、使わない機能や問題�
 
 ## [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
 
-telemetryと聞くと、パーソナルな部分までジロジロ見られてしまうというようなネガティブなイメージを持たれる方も少なくないのでは無いでしょうか。
-キーボードによる入力の一つ一つまでを収集されるというのは誇張かもしれないけれど、あながち間違いでもないと感じるのも以下の現実に起きている例から納得できます。
+telemetryと聞くと、パーソナルな部分までジロジロ見られてしまうというようなネガティブなイメージを直感で持たれる方も少なくないのでは無いでしょうか。
+
+キーボードによる入力の一つ一つまでを収集されるというのは誇張かもしれないが、あながち間違いでもないと感じるのも以下の現実に起きている例から納得できます。
 
 - [Kindleがページ送りのすべてを収集してる](https://www.theverge.com/2020/1/31/21117217/amazon-kindle-tracking-page-turn-taps-e-reader-privacy-policy-security-whispersync)
-- [VSCodeのtelemetryログ](https://www.roboleary.net/tools/2022/04/20/vscode-telemetry.html)
+- [VS Codeのtelemetryログ](https://www.roboleary.net/tools/2022/04/20/vscode-telemetry.html)
 - [.NETのtelemetryイベント](https://learn.microsoft.com/en-us/dotnet/core/tools/telemetry)
+
+そのようなイメージもあるのか、オープンソースのソフトウェアプロジェクトでは主に2つの理由からtelemetryを避ける傾向にあります。1つはユーザーに対する大きなプライバシーコストの懸念、もう一つはtelemetryの性質上集めた情報に対するアクセスを制限する必要があり、オープンソースであるプロジェクトの方向性に反するものとなるためです。
+
+telemetryを導入しない（何もしない）方が簡単ですが、それによって先に述べた、「使われていない機能に関するメンテナンス」や「ユーザー体験を損なう、バグや不具合などを含んだリリース」に対して時間を無駄に割いてしまうデメリットを被ります。
+
+Russは「侵略的なまでのtelemetryによるトラッキング」と「telemetryを導入せず何もしない」は誤った二分法であり、オープンソースを傷つけていると主張しています。こういった情報収集やそれによるGo言語開発の優先順位付けを行えないことが、メンテナの燃え尽きにつながるのではないかということです。
+
+Eric Raymondは「十分目玉に晒されていれば、すべてのバグは浅い」と言い、説明として十分なベータテスターと開発者仲間があれば、ほとんどの問題は認識され解決されるとしました。
+しかしそれは、1997年までは正しかったかもしれないが、現代のオープンソースソフトウェアはそれを開発したりどのように動くのかについて詳しくない人を含む多くの人々から使われるようになり、それでも発見できない先述のmacOSのGoのキャッシュのバグの例からも、目玉はスケールしないことがわかります。
+
+オープンソースソフトウェアのための、必要最低限のユーザーアクティビティの収集から開発を効率化させられる、新しいtelemetryのデザインを考える必要があるでしょう。
+
+## [Transparent Telemetry](https://research.swtch.com/telemetry-intro#design)
 
 
 
