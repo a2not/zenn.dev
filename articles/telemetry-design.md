@@ -36,7 +36,7 @@ func (s *Stack) Inc()
 
 `Stack`カウンタも同様で、加えて記録するフレームの最大値をコンストラクタに渡します。各フレームはimportパス、関数名、関数の先頭からの相対的な行番号で表現されます。(`cmd/compile/internal/base.Errorf+10`といったように)
 
-例えば`NewStack("missing-std-import", 5)`は
+`NewStack("missing-std-import", 5)`の結果によりインクリメントされるカウンタ名の一例は以下になります。
 
 ```
 missing-std-import
@@ -47,7 +47,18 @@ cmd/compile/internal/types2.(*Checker).Files+0
 cmd/compile/internal/types2.(*Config).Check+2
 ```
 
+関数の先頭からの相対的な行番号は頻繁に変わることはないため、異なるバージョンを通じて同じ処理の実行を追いかけることができます。
 
+importパスを利用することで、環境の絶対パスなどを晒すことがないように設計されています。また、ユーザー定義などの他の環境に現れることがない関数名を記録しても意味がないため、スタックトレースは関数名の変更を受けていないリリース済みのバージョンのもののみを記録するように実装されます。
+
+カウンタファイルは、`os.UserConfigDir()`によって判別された`<user>`の値を使い、`<user>/go/telemetry/local/`ディレクトリに保存されます。ファイルネームはプログラム名、バージョン、ツールチェーンのバージョン、GOOS、GOARCH、週の始まりの日付で構成され、例は以下になります。
+
+```
+/Users/rsc/Library/Application Support/go/telemetry/local/
+	compile-go1.21.1-darwin-arm64-2023-01-04.v1.count
+	gopls@v0.11.0-go1.21.1-linux-386-2023-01-04.v1.count
+	...
+```
 
 
 
