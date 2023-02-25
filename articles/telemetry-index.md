@@ -8,12 +8,12 @@ published: false
 
 # 背景
 
-Goのツールチェーンにtelemetryを導入することで、`go`, `gopls`, `govulncheck`などのコマンドラインツールの使われ方についての情報を収集し、オープンソースであるGo言語の開発に活用しようというproposalがあります。
+Goのツールチェーンにtelemetryを導入することで、`go`, `gopls`, `govulncheck`などのコマンドラインツールの使われ方についての情報を収集し、オープンソースであるGo言語の開発に活用しようというDiscussionsがあります。
 [telemetry in the Go toolchain #58409](https://github.com/golang/go/discussions/58409) 
 
-本記事執筆時点ではDiscussionsはLockされ、[proposalの投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
+本記事執筆時点ではDiscussionsはLockされ、[Discussionsの投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
 
-本記事は、Goツールチェーンへのtelemetry導入のproposalの展望を理解するために、proposalと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事(Discussionsを受けて追加された1本の追加記事含む)について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
+本記事は、Goツールチェーンへのtelemetry導入の展望を理解するために、Discussionsと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事(Discussionsを受けて追加された1本の追加記事含む)について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
 
 
 

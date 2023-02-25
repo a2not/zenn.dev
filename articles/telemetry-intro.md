@@ -83,7 +83,7 @@ GoogleのGoチームがtelemetryの情報収集用のサーバーを管理し、
 
 ## 利用方法
 
-Proposalでは次の点は議論の対象になっていましたが、記事では`GOTELEMETRY=off`が指定されない限りは、デフォルトでtelemetryが収集され、opt outする猶予期間としてツールチェーンのインストールから最低でも一週間は`GOTELEMETRY`の設定に関わらずデータは送信されないと記述されていました。
+Discussionsでは次の点は議論の対象になっていましたが、記事では`GOTELEMETRY=off`が指定されない限りは、デフォルトでtelemetryが収集され、opt outする猶予期間としてツールチェーンのインストールから最低でも一週間は`GOTELEMETRY`の設定に関わらずデータは送信されないと記述されていました。
 
 ちなみにDiscussionsでは、「[デフォルトでoff、そうでなければ事前にon/offを選択させるべき](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)」という意見が多く支持を集めているようです。
 この点についてRussは、議論を受けて追記した4つ目の記事で方針を表明しているようです。
