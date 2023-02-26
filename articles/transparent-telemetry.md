@@ -3,7 +3,7 @@ title: "Transparent Telemetryの概要"
 emoji: "🌌"
 type: "tech"
 topics: ["go", "oss", "proposal"]
-published: false
+published: true
 ---
 
 # 背景
