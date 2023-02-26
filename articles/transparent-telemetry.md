@@ -12,13 +12,12 @@ Goのツールチェーンにtelemetryを導入することで、`go`, `gopls`, 
 [telemetry in the Go toolchain #58409](https://github.com/golang/go/discussions/58409) 
 
 本記事執筆時点ではDiscussionsはLockされ、[投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
-(と言っても、一部の誤解した人によるネガティブなフィードバックを除けば[建設的な意見](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)が多く、今後前向きに仕様を検討してProposalとして提案される流れのようです。)^[フィードバックに関するRussの所感について、詳しくは[Part4](https://research.swtch.com/telemetry-opt-in)の前段]
+(と言っても、一部の誤解した人によるネガティブなフィードバックを除けば建設的な意見が多く、今後前向きに仕様を検討してProposalとして提案される流れのようです。)^[フィードバックに関するRussの所感について、詳しくは[Part4](https://research.swtch.com/telemetry-opt-in)の前段]
 
 本記事は、Goツールチェーンへのtelemetry導入の展望を理解するために、Discussionsと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事(Discussionsを受けて追加された1本の追加記事含む)について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
 
 
-
-# [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)
+# Part1: [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)
 
 ソフトウェアがどのように使われ、期待するパフォーマンスを発揮しているかを知るためのモダンな手法として、Russはtelemetryを上げています。その上で、それをオープンソース向けにした新たなデザインとして"Transparent Telemetry"を提案しています。
 
@@ -103,7 +102,7 @@ Discussionsでは次の点は議論の対象になっていましたが、記事
 Russはローカルでのプロトタイプの実装から、GoツールチェーンにTransparent Telemetryを組み込むパフォーマンスコストが十分に小さいと確信していて、2023年を通して実装していきたいと表明していました。
 
 
-# [The Design of Transparent Telemetry](https://research.swtch.com/telemetry-design)
+# Part2: [The Design of Transparent Telemetry](https://research.swtch.com/telemetry-design)
 
 Transparent Telemetryのデザイン(設計)について、Goツールチェーンに組み込む予定のものを上げて、5つの要素に分けて詳しく紹介しています。(詳細は省きます)
 
@@ -111,23 +110,73 @@ Transparent Telemetryのデザイン(設計)について、Goツールチェー�
 - Configuration: Go公式サイトでのレビューを含むパブリックな意思決定プロセスによって定められる、新たなグラフやメトリクスに対するtelemetryの設定。収集される情報や、サンプルレートを決める情報源となる。
 - Reporting: 週に一度、自動化されたメトリクスの報告プログラムが、現行の収集設定(`collection configuration`)をダウンロードするかどうか、及びその週のサンプルとしてデータを送信するかを決める。
 - Publishing: 情報を集めたサーバーは、日毎に集まった情報をまとめて圧縮し、表やグラフなどのサマリーと合わせて公開する。
-- Opt-out: デフォルトでtelemetryを使うため、設定によるシンプルで十分なopt-outを提供する。(2023-02-24の追記で、デフォルトでtelemetryの利用をoffにし、設定により利用を明示することでtelemetryの収集を行うopt-inの方式に変更すると書かれています。)
+- Opt-out: デフォルトでtelemetryを使うため、設定によるシンプルで十分なopt-outを提供する。当初デフォルトで有効とする設計にしていたのは2つの理由があるそうです。
+  - 1つは、大多数の人はデフォルトの設定を変更することはないため、デフォルトでtelemetryの収集がされない場合、収集されるサンプルの中でGoやTelemetryのシステムに詳しいユーザーからによるものの割合が増えることでバイアスが生じる危険性があるためです。
+  - もう1つの理由として、onに設定するチェックボックスの存在が、必要以上のデータを集める正当化になってしまうことを懸念しています。
+  - (2023-02-24の追記で、デフォルトでtelemetryの利用を無効にし、設定により有効化できるopt-inの方式に変更すると書かれています。)
 
 
 
-# [Use Cases for Transparent Telemetry](https://research.swtch.com/telemetry-uses)
+# Part3: [Use Cases for Transparent Telemetry](https://research.swtch.com/telemetry-uses)
+
+Transparent Telemetryによる情報を活かして、現状のGoツールチェーンの持つどのような問題を分析しようとしているのかを紹介しています。（詳細は省きます）
+
+- Go moduleと比べた、従来の`GOPATH`モードの利用率
+- Go workspace(`go.work`ファイル)の利用率
+- `-buildmode=shared`の利用率
+- 各`GOOS`, `GOARCH`の設定値の比率
+- サポート終了が決まっているWindows7, Windows8と比較した、WSLの利用率
+- 全ビルドの中のクロスコンパイル率と、各クロスコンパイルのホスト<->ターゲットの組み合わせの比率(`GOOS`, `GOARCH`)
+- Go全体でのビルドのキャッシュミス率
+- Goのバージョン別のビルドのキャッシュミス率
+- `go`コマンド実行の中の標準ライブラリのリコンパイル率
+- キャッシュを保持する有効な期間 (現状は最後のキャッシュヒットから5日保持するが、それがより短くなったほうが効率的なのか否か)
+- 世代別GCにインスパイアされた、[世代別ビルドキャッシュ](https://github.com/golang/go/issues/29561#issuecomment-1255769245)の導入の有効性
+- Go workspaceが持つモジュール数の分布
+- `go`コマンド実行毎に読み込まれる`go.mod`ファイルの数の分布
+- モジュールのダウンロードにかかった時間の分布
+- ...などなど^[[What is the latency distribution of a Go workspace load?
+](https://research.swtch.com/telemetry-uses#latency)以下省略]
+
+必要最小限の情報収集でも、Go言語の開発における多くの疑問に知見をもたらせることが分かります。
+
+
+# Part4: [Opting In to Transparent Telemetry](https://research.swtch.com/telemetry-opt-in)
+
+[Discussions](https://github.com/golang/go/discussions/58409#discussion-4835204)での議論を受けて追加された記事になります。
+
+当初デフォルトで有効化する(opt-out)のがTransparent Telemetryの設計でしたが、デフォルト無効化(opt-in)の提案が[強い支持](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)を受けたことから、改めてこの点について比較しています。
+
+
+フィードバックの例として以下のようなものがありました。^[[Opt-in vs Opt-out](https://research.swtch.com/telemetry-opt-in#opt-in_vs_opt-out)]
+
+- 内容は良いし喜んで有効化したいけど、デフォルトで有効化されているなら無効化したい
+- 公開された情報の中で、特殊で頻度の低い設定が特定のプロジェクトや企業に紐付いて、それら組織がどのような機能を使っているのか推測されてしまうのでは？
+  - Russ: 攻撃に利用するには限られた情報しか公開されない想定だけど、無視はできない
+
+他にも、これだけ詳細に従来のtelemetryとは異なるTransparent Telemetryを説明しているにも関わらず、多くの人々がそれを混同している状況があり、デフォルトで無効化することにしたそうです。
 
 
 
+その上で、デフォルトで無効化(opt-in)とすることのデメリットを2つに分けて議論しています。
+- [The Campaign Cost of Opt-In](https://research.swtch.com/telemetry-opt-in#campaign)
+  - どのような情報が集められ、どのような情報は守られるのかについての認知を広めるためのコスト
+    - グラフィカルなGoインストーラーの実行時
+    - リリースノート
+    - VS Codeで初めてGoを使う時など
+- [The Privacy Cost of Opt-In](https://research.swtch.com/telemetry-opt-in#privacy)
+  - Transparent Telemetryはサンプリングを行うことから、全てのユーザーから常に情報を集める場合と比較して、プライバシーに対するコストを緩和できる。
+  - しかし、統計的に優位な結果を得るために一定のサンプル数は必要で(1%有意水準を実現するためには、16,000件/週のサンプルが必要と試算)
+  - 有効化(opt-in)率が低い場合、有効化している環境にしわ寄せが起き、有効化することに対するプライバシーコストが高まる (デフォルト有効化と比べ)
 
-# [Opting In to Transparent Telemetry](https://research.swtch.com/telemetry-opt-in)
-
-準備中
+その他、統計的な側面への深堀りや、telemetryそのものを無くすことを再度比較対象に入れた議論、[Prio](https://crypto.stanford.edu/prio/paper.pdf)や[Prochlo](https://arxiv.org/pdf/2001.03618.pdf)などを活用したよりセキュアなtelemetryについても将来的な展望として紹介していました。（ここらへんの詳細は省きます）
 
 
+# まとめ
 
-# 最後に
+Transparent Telemetryは、ネガティブなイメージのある従来のtelemetryと異なり、オープンソース向けのtelemetryの再定義といった印象を受けました。
 
-すべて一つの記事にまとめようと考えていましたが、具体例など興味深く丁寧にまとめていたら長くなりそうなので、記事ごとに分割して公開していく予定です。
+オープンソースメンテナの燃え尽きなど問題になっていますが、Goを皮切りにその他のオープンソースプロジェクトに浸透していき、そういった問題も改善されていくと良いですね。
 
+今後も注目していきたいです。
 
