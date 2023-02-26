@@ -11,13 +11,12 @@ published: false
 Goのツールチェーンにテレメトリを導入することで、`go`, `gopls`, `govulncheck`などのコマンドラインツールの使われ方についての情報を収集し、オープンソースであるGo言語の開発に活用しようというDiscussionsがあります。
 [telemetry in the Go toolchain #58409](https://github.com/golang/go/discussions/58409) 
 
-本記事執筆時点ではDiscussionsはLockされ、[投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
-(と言っても、一部の誤解した人によるネガティブなフィードバックを除けば建設的な意見が多く、今後前向きに仕様を検討してProposalとして提案される流れのようです。)^[フィードバックに関するRussの所感について、詳しくは[Part4](https://research.swtch.com/telemetry-opt-in)の前段]
-
-本記事は、Goツールチェーンへのテレメトリ導入の展望を理解するために、Discussionsと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事(Discussionsを受けて追加された1本の追加記事含む)について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
+本記事は、Goツールチェーンへのテレメトリ導入の展望を理解するために、Discussionsと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の3本の記事と、Discussionsを受けて追加された1本の追加記事について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
 
 
 # Part1: [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)
+
+(Part1については、原文が分かりやすかったためほとんど和訳としています。一部[Summary](https://research.swtch.com/telemetry-intro#summary)の省略あり。)
 
 ソフトウェアがどのように使われ、期待するパフォーマンスを発揮しているかを知るためのモダンな手法として、Russはテレメトリを上げています。その上で、それをオープンソース向けにした新たなデザインとして"Transparent Telemetry"を提案しています。
 
@@ -41,7 +40,7 @@ Go 1.14のリリースプロセスにおいて、Appleの署名ツールを使�
 
 Goでの使われる頻度の少ない機能への変更例として、[Go1.13のNative Client (`GOOS=nacl`)のサポート終了](https://go.dev/doc/go1.13#ports)や、[Go1.15の32bit Intel CPUでのSSE2命令セットをサポートしない浮動小数点ハードウェア(`GO386=387`)のサポート終了](https://go.dev/doc/go1.15#386)が挙げられていますが、いずれも影響範囲の規模感について概ね予測通りの結果であったようです。
 
-しかし失敗例として、Go1.18の`-buildmode=shared`の削除についてドラフトに組み込んだが、Go1.18 beta 1のリリース時点で「まだ使ってるから消さないで」とのフィードバックがあり、[削除を諦めた](https://github.com/golang/go/issues/47788)という過去もあったようです。
+しかし失敗例として、Go1.18の`-buildmode=shared`の削除についてドラフトに組み込んだが、Go1.18 beta 1のリリース時点で「まだ使ってるから消さないでほしい」とのフィードバックがあり、[削除を諦めた](https://github.com/golang/go/issues/47788)という過去もあったようです。
 
 メンテナンスコストを軽減するために検討されているものとして、モダンなアトミック命令のないARMv5 (`GOARM=5`)サポート終了などもあります。最近で言えばGo1.20でmacOS High Sierraのサポートを終了することも検討されたが、ユーザーから[保留してほしいとの意見](https://github.com/golang/go/issues/57125#issuecomment-1416277589)が上がったようです。
 
@@ -180,7 +179,5 @@ Transparent Telemetryによる情報を活かして、現状のGoツールチェ
 
 Transparent Telemetryは、ネガティブなイメージのある従来のテレメトリと異なり、オープンソース向けのテレメトリの再定義といった印象を受けました。
 
-オープンソースメンテナの燃え尽きなど問題になっていますが、Goを皮切りにその他のオープンソースプロジェクトに浸透していき、そういった問題も改善されていくと良いですね。
-
-今後も注目していきたいです。
+オープンソースメンテナの燃え尽きなど問題になっていますが、Goを皮切りにその他のオープンソースプロジェクトに浸透していき、そういった問題も改善されていくと良いですね。今後も注目です。
 
