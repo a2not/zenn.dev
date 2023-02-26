@@ -143,12 +143,13 @@ Transparent Telemetryによる情報を活かして、現状のGoツールチェ
 
 [Discussions](https://github.com/golang/go/discussions/58409#discussion-4835204)での議論を受けて追加された記事になります。
 
-## フィードバックとデフォルト無効化(Opt-in)への変更
+## [Opt-in vs Opt-out](https://research.swtch.com/telemetry-opt-in#opt-in_vs_opt-out)
+
+フィードバックとデフォルト無効化(Opt-in)への変更経緯についての記述です。
 
 当初デフォルトで有効化する(opt-out)のがTransparent Telemetryの設計でしたが、デフォルト無効化(opt-in)の提案が[強い支持](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)を受けたことから、改めてこの点について比較しています。
 
-
-フィードバックの例として以下のようなものがありました。^[[Opt-in vs Opt-out](https://research.swtch.com/telemetry-opt-in#opt-in_vs_opt-out)]
+フィードバックの例として以下のようなものがありました。
 
 - 内容は良いし喜んで有効化したいけど、デフォルトで有効化されているなら無効化したい
 - 公開された情報の中で、特殊で頻度の低い設定が特定のプロジェクトや企業に紐付いて、それら組織がどのような機能を使っているのか推測されてしまうのでは？
@@ -156,9 +157,9 @@ Transparent Telemetryによる情報を活かして、現状のGoツールチェ
 
 他にも、これだけ詳細に従来のテレメトリとは異なるTransparent Telemetryを説明しているにも関わらず、多くの人々がそれを混同している状況があり、デフォルトで無効化することにしたそうです。
 
-## デフォルト無効化(Opt-in)のデメリット
+## The Campagin/Privacy Cost of Opt-in
 
-デフォルトでテレメトリを無効化するとした上で、そのデメリットを2つに分けて議論しています。
+デフォルトでテレメトリを無効化する(Opt-in)とした上で、そのデメリットを2つに分けて議論しています。
 
 - [The Campaign Cost of Opt-In](https://research.swtch.com/telemetry-opt-in#campaign)
   - どのような情報が集められ、どのような情報は守られるのかについての認知を広めるためのコスト
