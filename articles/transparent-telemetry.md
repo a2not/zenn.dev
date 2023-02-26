@@ -1,22 +1,32 @@
 ---
-title: "Transparent Telemetry for Open-Source Projectsを読む"
+title: "Transparent Telemetryの概要"
 emoji: "🌌"
 type: "tech"
 topics: ["go", "oss", "proposal"]
 published: false
 ---
 
-[目次ページはこちら](https://zenn.dev/a2not/articles/telemetry-index)
+# 背景
 
-[Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]
+Goのツールチェーンにtelemetryを導入することで、`go`, `gopls`, `govulncheck`などのコマンドラインツールの使われ方についての情報を収集し、オープンソースであるGo言語の開発に活用しようというDiscussionsがあります。
+[telemetry in the Go toolchain #58409](https://github.com/golang/go/discussions/58409) 
+
+本記事執筆時点ではDiscussionsはLockされ、[投稿](https://github.com/golang/go/discussions/58409#discussion-4835204)には👍(162)よりも👎(518)のリアクションが多くついていたり、導入に関しては賛否両論といった現状のようです。
+(と言っても、一部の誤解した人によるネガティブなフィードバックを除けば[建設的な意見](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)が多く、今後前向きに仕様を検討してProposalとして提案される流れのようです。)^[フィードバックに関するRussの所感について、詳しくは[Part4](https://research.swtch.com/telemetry-opt-in)の前段]
+
+本記事は、Goツールチェーンへのtelemetry導入の展望を理解するために、Discussionsと同じ2023年2月8日にRuss Coxにより投稿された[Transparent Telemetry](https://research.swtch.com/telemetry)^["[Transparent Telemetry](https://research.swtch.com/telemetry)" © Russ Cox [Licensed under CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)]の4本の記事(Discussionsを受けて追加された1本の追加記事含む)について概要をまとめます。^[この記事は完全な和訳記事ではなく、個人的な解釈に基づいたまとめで、一部省略や表現の変更などがあります。誤りに気づいた場合はコメント下さい。]
+
+
+
+# [Transparent Telemetry for Open-Source Projects](https://research.swtch.com/telemetry-intro)
 
 ソフトウェアがどのように使われ、期待するパフォーマンスを発揮しているかを知るためのモダンな手法として、Russはtelemetryを上げています。その上で、それをオープンソース向けにした新たなデザインとして"Transparent Telemetry"を提案しています。
 
-# [Why Telemetry?](https://research.swtch.com/telemetry-intro#why)
+## [Why Telemetry?](https://research.swtch.com/telemetry-intro#why)
 
 telemetry以外にソフトウェアのバグや使われ方の情報を知れる手段としてバグ報告とサーベイをあげ、それぞれでは不十分であることを解説し、telemetryの必要性を訴えています。
 
-## バグ報告だけでは不十分
+### バグ報告だけでは不十分
 
 バグ報告では、ユーザーがバグと判定しその上で報告をされたものしか知ることができないが、ユーザーが気づけない事象についてtelemetryでは統計的に不具合を認識することができるとして、過去のGo開発からの具体例を上げています。
 
@@ -26,7 +36,7 @@ Go 1.14のリリースプロセスにおいて、Appleの署名ツールを使�
 
 telemetryがあれば、1.14移行のバージョンのGoを使っているMacの環境についてプリコンパイルされた標準ライブラリへのキャッシュミス率が100%であることが分かるため、すぐに気づくことができたのではないかと主張しています。
 
-## サーベイだけでは不十分
+### サーベイだけでは不十分
 
 サーベイではユーザーがGoをどんな目的で使いたいかなどを理解できたが、これはあくまで少ないサンプルであり、特に使われる頻度の少ない機能についての情報を集めるためには、精度を高めるためにさらに大きなサンプルを必要とする問題があります。
 
@@ -38,7 +48,7 @@ Goでの使われる頻度の少ない機能への変更例として、[Go1.13�
 
 telemetryも完璧なものではないですが、使わない機能や問題のある機能についてメンテナンスを続けるよりは、大きなサンプルのユーザーへのサーベイをする必要なく、統計的に利用状況を確認できるtelemetryを導入する必要性はあるのかもしれません。
 
-# [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
+## [Why Telemetry For Open Source?](https://research.swtch.com/telemetry-intro#why-open-source)
 
 telemetryと聞くと、プライベートな部分まで情報収集されてしまうというようなネガティブなイメージを直感で持たれる方も少なくないのではないでしょうか。
 
@@ -59,13 +69,13 @@ Eric Raymondは「十分目玉に晒されていれば、すべてのバグは�
 
 オープンソースソフトウェアのための、プライバシーを侵害しない必要最低限のユーザーアクティビティの収集から開発を効率化させられる、新しいtelemetryのデザインを考える必要があるでしょう。
 
-# [Transparent Telemetry](https://research.swtch.com/telemetry-intro#design)
+## [Transparent Telemetry](https://research.swtch.com/telemetry-intro#design)
 
 このシリーズで提案するTransparent Telemetryは、オープンソースのためのtelemetryで、最小限のデータ収集(年間で数キロバイト程度)と、集めた情報のすべてを公開する方針からその名前がついています。(「透過的テレメトリ」)
 
 ここでは、将来的にGoツールチェーンに導入を検討しているTransparent Telemetryの概要を紹介しています。
 
-## 情報の収集方法
+### 情報の収集方法
 GoツールチェーンのTelemetryにおいては、実行ごとにキャッシュヒット、利用した機能、レイテンシなどの情報を一週間ごとにディスクにファイルとして保存するようです。ユーザーのデータやユーザーを識別するような情報は含まず、一部で簡潔なスタックトレースなども保存するが、引数についての情報は一切保存しない方針です。
 
 GoogleのGoチームがtelemetryの情報収集用のサーバーを管理し、毎週10%の確率でユーザー環境に収集設定(`collection configuration`)を配布して、サーバーがどの情報を欲しているのかを伝えます。収集設定はGo moduleとして配布されるため、Go checksum databaseでvalidateすることができます。
@@ -74,31 +84,50 @@ GoogleのGoチームがtelemetryの情報収集用のサーバーを管理し、
 先述の通り、データにはIDなどユーザーを識別する情報を含みません。例えば、ユーザー名、マシンID、MACアドレス、IPアドレス及びそのプレフィックス、マシンの位置情報、ランダムに生成された擬似的なIDも含みません。
 含まれる想定の情報としては、ツールチェーンのバージョンやビルドターゲットとされたOSやCPUアーキテクチャ、荒い粒度でのホストOSの情報(`"Windows 8"`など)、ツールチェーンが利用したローカルのCコンパイラなどの他のツールの情報(`"gcc 2.95"`)などがあります。
 
-## 集めた情報の公開方法
+### 集めた情報の公開方法
 
 集めた情報のアクセスとしては、毎日の収集情報の更新、集計結果のグラフなどの`go.dev`での公開、集まった情報をすべて誰でもダウンロード可能にする予定のようです。
 
 データを集めるためにTCPコネクションを利用した場合、システムのパブリックIPアドレスがデータに紐付くことになりますが、それらの情報については今後設定されるプライバシーポリシーに基づき、アップロードされ公開される前に切り離されます。
 切り離されるというのも、DoS対策などを含むサーバーのメンテナンスのためにIPアドレスを含むログが必要になるため、IPアドレスは削除ではなく保存される必要があるのですが、公開されるデータとは別で保存されるようです(おそらく非公開で、サーバーの運用のためだけに使われる?)。
 
-## 利用方法
+### 利用方法
 
 Discussionsでは次の点は議論の対象になっていましたが、記事では`GOTELEMETRY=off`が指定されない限りは、デフォルトでtelemetryが収集され、opt outする猶予期間としてツールチェーンのインストールから最低でも一週間は`GOTELEMETRY`の設定に関わらずデータは送信されないと記述されていました。
 
 ちなみにDiscussionsでは、「[デフォルトでoff、そうでなければ事前にon/offを選択させるべき](https://github.com/golang/go/discussions/58409#discussioncomment-4905912)」という意見が多く支持を集めているようです。
 この点についてRussは、議論を受けて追記した4つ目の記事で方針を表明しているようです。
 
-# [Summary](https://research.swtch.com/telemetry-intro#summary)
-
-従来のtelemetryとは異なる、Transparent Telemetryの持つ特性についてまとめています。
-
-(追加の補足情報なども一部ありますが、省略します。)
-
-# [Next Steps](https://research.swtch.com/telemetry-intro#next_steps)
-
-Transparent Telemetryの詳細なデザイン(設計)については次の2本目の記事、ユースケースについてはその次の3本目の記事で詳細を記述しています。
-
-ここでは、VS Codeがtelemetryによって粒度の高い詳細な情報を集めているが、集めているデータをよく見ると、異なるイベントで発生したデータ間において比較しても新たな情報が少なく似たようなログの羅列となっている点を指摘し、Transparent Telemetryのように必要最小限に収めることで不要なプライバシーコストをユーザーに負担させる必要もなくなるのではという意見も残しています。
+## [Next Steps](https://research.swtch.com/telemetry-intro#next_steps)
 
 Russはローカルでのプロトタイプの実装から、GoツールチェーンにTransparent Telemetryを組み込むパフォーマンスコストが十分に小さいと確信していて、2023年を通して実装していきたいと表明していました。
+
+
+# [The Design of Transparent Telemetry](https://research.swtch.com/telemetry-design)
+
+Transparent Telemetryのデザイン(設計)について、Goツールチェーンに組み込む予定のものを上げて、5つの要素に分けて詳しく紹介しています。(詳細は省きます)
+
+- Counting: Goツールチェーンがカウンタの値(メトリクス)を週毎にローカルファイルとして保存する。
+- Configuration: Go公式サイトでのレビューを含むパブリックな意思決定プロセスによって定められる、新たなグラフやメトリクスに対するtelemetryの設定。収集される情報や、サンプルレートを決める情報源となる。
+- Reporting: 週に一度、自動化されたメトリクスの報告プログラムが、現行の収集設定(`collection configuration`)をダウンロードするかどうか、及びその週のサンプルとしてデータを送信するかを決める。
+- Publishing: 情報を集めたサーバーは、日毎に集まった情報をまとめて圧縮し、表やグラフなどのサマリーと合わせて公開する。
+- Opt-out: デフォルトでtelemetryを使うため、設定によるシンプルで十分なopt-outを提供する。(2023-02-24の追記で、デフォルトでtelemetryの利用をoffにし、設定により利用を明示することでtelemetryの収集を行うopt-inの方式に変更すると書かれています。)
+
+
+
+# [Use Cases for Transparent Telemetry](https://research.swtch.com/telemetry-uses)
+
+
+
+
+# [Opting In to Transparent Telemetry](https://research.swtch.com/telemetry-opt-in)
+
+準備中
+
+
+
+# 最後に
+
+すべて一つの記事にまとめようと考えていましたが、具体例など興味深く丁寧にまとめていたら長くなりそうなので、記事ごとに分割して公開していく予定です。
+
 
