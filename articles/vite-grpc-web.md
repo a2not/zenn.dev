@@ -1,5 +1,5 @@
 ---
-title: "Viteでgrpc-webを使う時の注意"
+title: "Viteでgrpc-webを使うのはおすすめできない"
 emoji: "⛈️"
 type: "tech"
 topics: ["vite", "grpc", "grpc-web", "typescript", "javascript"]
@@ -10,15 +10,17 @@ published: false
 
 公式 (https://github.com/grpc/grpc-web) は使えるがおすすめしない。
 
+（※ 間違いや提案などあればコメント下さい。）
+
 # 公式の問題点
 
-[grpc-web not working in a Vite+Typescript app #1242](https://github.com/grpc/grpc-web/issues/1242) などで議論になっていた通りViteとの相性が悪いと言われていたが、原因は公式のgrpc-webがCommon JSかClosureのみしか生成できないことにある。
+[grpc-web not working in a Vite+Typescript app #1242](https://github.com/grpc/grpc-web/issues/1242) などで議論になっていた通りViteとgrpc-webの相性が悪いと言われていたが、原因は公式のgrpc-webがCommon JSかClosureのみしか生成できないことにある。
 
-ViteはESMしか理解しないのでそのままimportすることができない。
+Viteは原則ESMしか理解しないのでそのままimportすることができない。
 
 ## 回避策
 
-Viteは世の中に多数存在するCJSが依存関係に含まれているケースに対応するために、デフォルトで`node_modules/` 内などのCJSをESMに変換してくれる機能を持っている（[依存関係の事前バンドル](https://ja.vitejs.dev/guide/dep-pre-bundling#%E4%BE%9D%E5%AD%98%E9%96%A2%E4%BF%82%E3%81%AE%E4%BA%8B%E5%89%8D%E3%83%8F%E3%82%99%E3%83%B3%E3%83%88%E3%82%99%E3%83%AB) を参照）。
+Viteは世の中に多数存在するCJS製ライブラリが依存関係に含まれているケースに対応するために、デフォルトで`node_modules/` 内などのCJSをESMに変換してくれる機能を持っている（[依存関係の事前バンドル](https://ja.vitejs.dev/guide/dep-pre-bundling#%E4%BE%9D%E5%AD%98%E9%96%A2%E4%BF%82%E3%81%AE%E4%BA%8B%E5%89%8D%E3%83%8F%E3%82%99%E3%83%B3%E3%83%88%E3%82%99%E3%83%AB) を参照）。
 
 そのため、grpc-webにより生成されたCJSのコードをパッケージ化してしまえばよい。
 
