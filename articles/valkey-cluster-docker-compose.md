@@ -3,7 +3,7 @@ title: "docker composeでValkey clusterを立てる"
 emoji: "💻"
 type: "tech"
 topics: ["valkey", "docker", "dockercompose"]
-published: false
+published: true
 ---
 
 ローカルでValkey clusterに対してテストをしたい時に。
@@ -20,7 +20,7 @@ published: false
 
 dump.rdbやクラスタ設定ファイルを永続化する場合、IPアドレスを固定しないとcompose up時アドレス割当が変更された場合にクラスタ間で通信断になるので注意。
 
-`--cluster-announce-hostname` でホスト名指定していても、IPアドレス解決してクラスタ設定を保存するので、再起動時のIPアドレスの変更に動的に対応できない。
+`--cluster-announce-hostname` でホスト名指定していても、valkeyがIPアドレス解決してからクラスタ設定を保存するので、再起動時のIPアドレスの変更に動的に対応できない。
 
 ## サンプル
 
