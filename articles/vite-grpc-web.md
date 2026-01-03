@@ -2,7 +2,7 @@
 title: "Viteでgrpc-webを使うのはおすすめできない"
 emoji: "⛈️"
 type: "tech"
-topics: ["vite", "grpc", "grpc-web", "typescript", "javascript"]
+topics: ["vite", "grpc", "grpcweb", "typescript", "javascript"]
 published: true
 ---
 
